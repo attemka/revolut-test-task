@@ -1,4 +1,4 @@
-export const getCurrencyRates = (currencyName: string): Promise<string> =>{
+export const getCurrencyRates = (currencyName: string): Promise<{[key: string]: number}> =>{
     return fetch(
         ` https://api.exchangeratesapi.io/latest?base=${currencyName}`,
     )

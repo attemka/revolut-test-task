@@ -29,14 +29,6 @@ type ExchangeProps = {
 const colourStyles = (color: string | undefined) => ({
     control: (styles: any) => ({ ...styles, backgroundColor: color, color: theme.TEXT_COLOR }),
     singleValue: (styles: any) => ({ ...styles, color: theme.TEXT_COLOR }),
-    // option: (styles: any) => {
-    //     return {
-    //         ...styles,
-    //         backgroundColor: 'blue',
-    //         color: '#FFF',
-    //         cursor: 'default',
-    //     }
-    // },
 })
 
 export const Exchange: React.FC<ExchangeProps> = ({
@@ -53,23 +45,24 @@ export const Exchange: React.FC<ExchangeProps> = ({
     <ExchangeContainer color={bgColor}>
         <CurrencyContainer>
             <Select
+                aria-label={'current-currency'}
                 value={currencyList.find(currencyItem => currencyItem.label === currency)}
                 onChange={(val: ValueType<{ value: string; label: string }>) => onCurrencyChange(val, isSender)}
                 options={currencyList}
                 styles={colourStyles(bgColor)}
             />
-            <H5>current amount: {userAmount}</H5>
+            <H5 aria-label={'user-amount'}>current amount: {userAmount}</H5>
         </CurrencyContainer>
         <ExchangeInputContainer>
-            <Colored color={theme.TEXT_COLOR}>{exchangeAmount ? (isSender ? '-' : '+') : ''}</Colored>
+            <Colored aria-label={"exchange-sign"} color={theme.TEXT_COLOR}>{exchangeAmount ? (isSender ? '-' : '+') : ''}</Colored>
             <ExchangeInput
+                aria-label={"exchange-input"}
                 color={bgColor}
                 placeholder={'0'}
                 autoFocus={isSender}
                 value={exchangeAmount}
                 onChange={e => onInputChange(e, isSender)}
             />
-            {console.log(rate)}
         </ExchangeInputContainer>
     </ExchangeContainer>
 )

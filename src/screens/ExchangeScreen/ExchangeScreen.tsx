@@ -38,14 +38,20 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
     updateRatesInterval?: number = undefined
 
     componentDidMount(): void {
-        const { currentSendCurrency } = this.state
         this.updateRates()
         this.updateRatesInterval = setInterval(this.updateRates, 10 * 1000)
     }
 
     updateRates = () => {
-        const { currentSendCurrency } = this.state
-        getCurrencyRates(currentSendCurrency).then(res => this.setState({ currencies: res }))
+        const { currentSendCurrency, currentReceiveCurrency, sendExchangeAmount, receiveExchangeAmount } = this.state
+        getCurrencyRates(currentSendCurrency).then(res =>
+            this.setState({
+                currencies: res,
+                receiveExchangeAmount: sendExchangeAmount
+                    ? (Number(sendExchangeAmount) * res[currentReceiveCurrency]).toFixed(2)
+                    : receiveExchangeAmount,
+            }),
+        )
     }
 
     handleInputChange = (event: ChangeEvent<HTMLInputElement>, isSender: boolean) => {
@@ -58,7 +64,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         }
         const value = event.target.value.match(floatRegex)![0]
         const numberValue: number = parseFloat(value)
-        const { currencies, currentSendCurrency, currentReceiveCurrency } = this.state
+        const { currencies, currentReceiveCurrency } = this.state
         if (!currencies) {
             return
         }
@@ -73,7 +79,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
     }
 
     handleCurrencyChange = (currency: ValueType<{ value: string; label: string }>, isParent: boolean) => {
-        const { currentReceiveCurrency, currentSendCurrency } = this.state
+        const { currentReceiveCurrency, currentSendCurrency, sendExchangeAmount, receiveExchangeAmount } = this.state
         if (Array.isArray(currency)) {
             return //type checking
         } else {
@@ -82,15 +88,40 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
             }
             if (isParent) {
                 if (currency.value === currentReceiveCurrency) {
-                    this.setState({ currentReceiveCurrency: currentSendCurrency })
+                    getCurrencyRates(currency.value).then((res: { [key: string]: number }) => {
+                        const receiverRate: string = (Number(sendExchangeAmount) * res[currentSendCurrency]).toFixed(2)
+                        this.setState({
+                            currencies: res,
+                            receiveExchangeAmount: receiverRate,
+                            currentReceiveCurrency: currentSendCurrency,
+                        })
+                    })
+                } else {
+                    getCurrencyRates(currency.value).then((res: { [key: string]: number }) => {
+                        const receiverRate: string = (Number(sendExchangeAmount) * res[currentReceiveCurrency]).toFixed(
+                            2,
+                        )
+                        this.setState({ currencies: res, receiveExchangeAmount: receiverRate })
+                    })
                 }
-                getCurrencyRates(currency.value).then(res => this.setState({ currencies: res }))
-
                 this.setState({ currentSendCurrency: currency.value })
             } else {
                 if (currency.value === currentSendCurrency) {
-                    getCurrencyRates(currentReceiveCurrency).then(res => this.setState({ currencies: res }))
-                    this.setState({ currentSendCurrency: currentReceiveCurrency })
+                    getCurrencyRates(currentReceiveCurrency).then(res => {
+                        const senderValue: string = (Number(receiveExchangeAmount) * res[currentSendCurrency]).toFixed(
+                            2,
+                        )
+                        this.setState({
+                            currencies: res,
+                            currentSendCurrency: currentReceiveCurrency,
+                            sendExchangeAmount: senderValue,
+                        })
+                    })
+                } else {
+                    getCurrencyRates(currentSendCurrency).then(res => {
+                        const senderValue: string = (Number(sendExchangeAmount) / res[currency.value]).toFixed(2)
+                        this.setState({ currencies: res, sendExchangeAmount: senderValue })
+                    })
                 }
                 this.setState({ currentReceiveCurrency: currency.value })
             }
@@ -124,6 +155,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         return (
             <ExchangeScreenContainer>
                 <Exchange
+                    data-testid={'send-exchange-field'}
                     currency={currentSendCurrency}
                     currencyList={currencyList}
                     onCurrencyChange={this.handleCurrencyChange}
@@ -134,6 +166,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
                     bgColor={theme.PRIMARY_COLOR}
                 />
                 <Exchange
+                    data-testid={'receive-exchange-field'}
                     currency={currentReceiveCurrency}
                     currencyList={currencyList}
                     onCurrencyChange={this.handleCurrencyChange}

@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/react-select": "^2.0.17",
-    "react-select": "^2.4.3"
+    "react-select": "^2.4.3",
+    "react-testing-library": "^7.0.0"
   }
 }
