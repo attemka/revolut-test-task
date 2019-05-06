@@ -41,6 +41,7 @@ export const Exchange: React.FC<ExchangeProps> = ({
     isSender,
     onInputChange,
     bgColor,
+    ...props
 }) => (
     <ExchangeContainer color={bgColor}>
         <CurrencyContainer>
@@ -54,9 +55,12 @@ export const Exchange: React.FC<ExchangeProps> = ({
             <H5 aria-label={'user-amount'}>current amount: {userAmount}</H5>
         </CurrencyContainer>
         <ExchangeInputContainer>
-            <Colored aria-label={"exchange-sign"} color={theme.TEXT_COLOR}>{exchangeAmount ? (isSender ? '-' : '+') : ''}</Colored>
+            <Colored aria-label={'exchange-sign'} color={theme.TEXT_COLOR}>
+                {exchangeAmount ? (isSender ? '-' : '+') : ''}
+            </Colored>
             <ExchangeInput
-                aria-label={"exchange-input"}
+                data-testid={`exchange-input-${isSender ? 'sender' : 'receiver'}`}
+                aria-label={'exchange-input'}
                 color={bgColor}
                 placeholder={'0'}
                 autoFocus={isSender}

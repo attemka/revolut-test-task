@@ -1,6 +1,5 @@
 import React from 'react'
 import logo from './logo.svg'
-import './App.css'
 import ExchangeScreen, { CurrencyEntity } from './screens/ExchangeScreen/ExchangeScreen'
 
 type AppState = {
@@ -21,8 +20,8 @@ class App extends React.Component {
         const fromCurrencyIndex = userCurrencies.findIndex(currency => currency.name === fromCurr)
         const toCurrencyIndex = userCurrencies.findIndex(currency => currency.name === toCurr)
         userCurrencies[fromCurrencyIndex].userAmount -= amount
-        userCurrencies[toCurrencyIndex].userAmount = parseFloat((
-            userCurrencies[toCurrencyIndex].userAmount + parseFloat((amount * rate).toFixed(2))).toFixed(2),
+        userCurrencies[toCurrencyIndex].userAmount = parseFloat(
+            (userCurrencies[toCurrencyIndex].userAmount + parseFloat((amount * rate).toFixed(2))).toFixed(2),
         )
         this.setState({ userCurrencies })
     }
