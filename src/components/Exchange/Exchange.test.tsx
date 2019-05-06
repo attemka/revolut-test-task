@@ -2,10 +2,6 @@ import React from 'react'
 import { Exchange } from './Exchange'
 import { render, cleanup, fireEvent } from 'react-testing-library'
 
-function isElementInput<T extends HTMLElement>(element: T): T is HTMLInputElement {
-    // Validate that element is actually an input
-    return element instanceof HTMLInputElement
-}
 describe('Component: exchange', () => {
     afterEach(cleanup)
 
@@ -25,7 +21,7 @@ describe('Component: exchange', () => {
                 userAmount={100}
             />,
         )
-        const input = utils.getByLabelText('exchange-input')
+        const input = utils.getByLabelText('exchange-input') as HTMLInputElement
         const sign = utils.getByLabelText('exchange-sign')
         const userAmount = utils.getByLabelText('user-amount')
         const currencySelect = utils.getByLabelText('current-currency')
@@ -40,7 +36,6 @@ describe('Component: exchange', () => {
 
     test('displays passed currency amount correctly', () => {
         const { input } = setup()
-        // @ts-ignore
         expect(input.value).toEqual('228')
     })
 

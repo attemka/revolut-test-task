@@ -32,7 +32,7 @@ export const CurrencyRateBlock = styled.div`
     right: -30px;
 `
 
-export const ExchangeInput = styled.input`
+export const ExchangeInput = styled('input')<{value: string}>`
     background: ${({ color }) => color || theme.PRIMARY_COLOR};
     color: ${theme.TEXT_COLOR};
     width: ${({ value }) => `${(value && value.length) || 1}ch`};

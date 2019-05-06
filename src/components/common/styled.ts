@@ -1,32 +1,32 @@
 import { theme } from '../../utils/theme'
 import styled from 'styled-components'
 
-export const H5 = styled.div`
+export const H5 = styled('div')<{ color?: string }>`
     color: ${({ color }) => color || theme.TEXT_COLOR};
     font: ${theme.H5} ${theme.FONT};
 `
 
-export const H4 = styled.div`
+export const H4 = styled('div')<{ color?: string }>`
     color: ${({ color, theme }) => color || theme.TEXT_COLOR};
     font: ${theme.H4} ${theme.FONT};
 `
 
-export const H3 = styled.div`
+export const H3 = styled('div')<{ color?: string }>`
     color: ${({ color }) => color || theme.TEXT_COLOR};
     font: ${theme.H3} ${theme.FONT};
 `
 
-export const H2 = styled.div`
+export const H2 = styled('div')<{ color?: string }>`
     color: ${({ color, theme }) => color || theme.TEXT_COLOR};
     font: ${theme.H2} ${theme.FONT};
 `
 
-export const H1 = styled.div`
+export const H1 = styled('div')<{ color?: string }>`
     color: ${({ color }) => color || theme.TEXT_COLOR};
     font: ${theme.H1} ${theme.FONT};
 `
 
-export const ColoredButton = styled.button`
+export const ColoredButton = styled('button')<{ background?: string; disabled: boolean }>`
     width: 120px;
     height: 40px;
     color: ${theme.TEXT_COLOR};
