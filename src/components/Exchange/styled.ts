@@ -32,10 +32,19 @@ export const CurrencyRateBlock = styled.div`
     right: -30px;
 `
 
-export const ExchangeInput = styled('input')<{value: string}>`
+export const InputWrapper = styled.div`
+    position: relative;
+    min-width: 5px;
+    min-height: 26px;
+`
+
+export const ExchangeInput = styled('input')<{ value: string; widthVal?: string | null }>`
     background: ${({ color }) => color || theme.PRIMARY_COLOR};
     color: ${theme.TEXT_COLOR};
-    width: ${({ value }) => `${(value && value.length) || 1}ch`};
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;  
     font: ${theme.H2} ${theme.FONT};
     text-align: end;
     border: 0;

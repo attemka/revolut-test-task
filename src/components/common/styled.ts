@@ -40,3 +40,8 @@ export const ColoredButton = styled('button')<{ background?: string; disabled: b
 export const Colored = styled.div`
     color: ${({ color }) => color};
 `
+
+export const HiddenValue = styled.div`
+    opacity: 0;
+    font: ${theme.H2} ${theme.FONT};
+`

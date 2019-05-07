@@ -69,7 +69,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
     }
 
     handleInputChange = (event: ChangeEvent<HTMLInputElement>, isSender: boolean) => {
-        const floatRegex = /^([1-9]{1,10})([.][1-9]{0,2})?$|^0(\.[0-9]{0,2})?$/
+        const floatRegex = /^([1-9][0-9]{0,9})([.][1-9]{0,2})?$|^0(\.[0-9]{0,2})?$/
         if (!floatRegex.test(event.target.value)) {
             if (!event.target.value) {
                 this.setState({ sendExchangeAmount: '', receiveExchangeAmount: '' })

@@ -1,12 +1,13 @@
-import React, { ChangeEvent, Component } from 'react'
+import React, { ChangeEvent, Component, RefObject } from 'react'
 import {
     ExchangeContainer,
     CurrencyContainer,
     ExchangeInput,
     ExchangeInputContainer,
     CurrencyRateBlock,
+    InputWrapper,
 } from './styled'
-import { Colored, H5 } from '../common/styled'
+import { Colored, H5, HiddenValue } from '../common/styled'
 import Select from 'react-select'
 import { ValueType } from 'react-select/lib/types'
 import { theme } from '../../utils/theme'
@@ -42,31 +43,41 @@ export const Exchange: React.FC<ExchangeProps> = ({
     onInputChange,
     bgColor,
     ...props
-}) => (
-    <ExchangeContainer color={bgColor}>
-        <CurrencyContainer>
-            <Select
-                aria-label={'current-currency'}
-                value={currencyList.find(currencyItem => currencyItem.label === currency)}
-                onChange={(val: ValueType<{ value: string; label: string }>) => onCurrencyChange(val, isSender)}
-                options={currencyList}
-                styles={colourStyles(bgColor)}
-            />
-            <H5 aria-label={'user-amount'}>current amount: {userAmount}</H5>
-        </CurrencyContainer>
-        <ExchangeInputContainer>
-            <Colored aria-label={'exchange-sign'} color={theme.TEXT_COLOR}>
-                {exchangeAmount ? (isSender ? '-' : '+') : ''}
-            </Colored>
-            <ExchangeInput
-                data-testid={`exchange-input-${isSender ? 'sender' : 'receiver'}`}
-                aria-label={'exchange-input'}
-                color={bgColor}
-                placeholder={'0'}
-                autoFocus={isSender}
-                value={exchangeAmount}
-                onChange={e => onInputChange(e, isSender)}
-            />
-        </ExchangeInputContainer>
-    </ExchangeContainer>
-)
+}) => {
+    let inputRef: any = React.createRef()
+
+    //@ts-ignore
+    return (
+        <ExchangeContainer color={bgColor}>
+            <CurrencyContainer>
+                <Select
+                    aria-label={'current-currency'}
+                    value={currencyList.find(currencyItem => currencyItem.label === currency)}
+                    onChange={(val: ValueType<{ value: string; label: string }>) => onCurrencyChange(val, isSender)}
+                    options={currencyList}
+                    styles={colourStyles(bgColor)}
+                />
+                <H5 aria-label={'user-amount'}>current amount: {userAmount}</H5>
+            </CurrencyContainer>
+            <ExchangeInputContainer>
+                <Colored aria-label={'exchange-sign'} color={theme.TEXT_COLOR} style={{ paddingRight: '5px' }}>
+                    {exchangeAmount ? (isSender ? '-' : '+') : ''}
+                </Colored>
+                <InputWrapper>
+                    <HiddenValue>{exchangeAmount || '0'}</HiddenValue>
+                    <ExchangeInput
+                        data-testid={`exchange-input-${isSender ? 'sender' : 'receiver'}`}
+                        aria-label={'exchange-input'}
+                        color={bgColor}
+                        //@ts-ignore
+                        widthVal={(inputRef.current && inputRef.current.clientWidth) || '1'}
+                        placeholder={'0'}
+                        autoFocus={isSender}
+                        value={exchangeAmount}
+                        onChange={e => onInputChange(e, isSender)}
+                    />
+                </InputWrapper>
+            </ExchangeInputContainer>
+        </ExchangeContainer>
+    )
+}

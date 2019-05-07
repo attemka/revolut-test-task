@@ -1,6 +1,6 @@
 import React from 'react'
 import ExchangeScreen from './ExchangeScreen'
-import { render, cleanup, fireEvent, waitForDomChange} from 'react-testing-library'
+import { render, cleanup, fireEvent, waitForDomChange } from 'react-testing-library'
 import 'jest-dom/extend-expect'
 
 describe('Component: ExchangeScreen', () => {
@@ -101,7 +101,6 @@ describe('Component: ExchangeScreen', () => {
 
             fireEvent.change(senderInput, { target: { value: '50' } })
             await waitForDomChange().then(() => expect(exchangeButton).not.toHaveAttribute('disabled'))
-
         })
     })
 })
