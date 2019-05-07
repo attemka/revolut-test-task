@@ -53,7 +53,6 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
             currentActive,
         } = this.state
         getCurrencyRates(currentSendCurrency).then(res => {
-            console.log(currentActive)
             this.setState({
                 currencies: res,
                 receiveExchangeAmount:

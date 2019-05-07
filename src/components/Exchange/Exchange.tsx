@@ -6,6 +6,7 @@ import {
     ExchangeInputContainer,
     CurrencyRateBlock,
     InputWrapper,
+    UserAmountContainer,
 } from './styled'
 import { Colored, H5, HiddenValue } from '../common/styled'
 import Select from 'react-select'
@@ -57,7 +58,7 @@ export const Exchange: React.FC<ExchangeProps> = ({
                     options={currencyList}
                     styles={colourStyles(bgColor)}
                 />
-                <H5 aria-label={'user-amount'}>current amount: {userAmount}</H5>
+                <UserAmountContainer aria-label={'user-amount'}>current amount: {userAmount}</UserAmountContainer>
             </CurrencyContainer>
             <ExchangeInputContainer>
                 <Colored aria-label={'exchange-sign'} color={theme.TEXT_COLOR} style={{ paddingRight: '5px' }}>

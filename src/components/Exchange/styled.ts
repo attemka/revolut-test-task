@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { theme } from '../../utils/theme'
+import {H5} from '../common/styled'
 
 export const ExchangeContainer = styled.div`
     width: 100%;
@@ -17,6 +18,11 @@ export const ExchangeContainer = styled.div`
 export const CurrencyContainer = styled.div`
     display: flex;
     flex-direction: column;
+    width: 120px;
+`
+
+export const UserAmountContainer = styled(H5)`
+  white-space: nowrap;
 `
 
 export const ExchangeInputContainer = styled.div`
