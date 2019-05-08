@@ -44,7 +44,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         this.updateRatesInterval = setInterval(this.updateRates, 10 * 1000)
     }
 
-    updateRates = () => {
+    updateRates = (): void => {
         const {
             currentSendCurrency,
             currentReceiveCurrency,
@@ -61,14 +61,14 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
                         : receiveExchangeAmount,
                 sendExchangeAmount:
                     currentActive === 'receiver' && receiveExchangeAmount
-                        ? (Number(sendExchangeAmount) * res[currentReceiveCurrency]).toFixed(2)
+                        ? (Number(receiveExchangeAmount) / res[currentReceiveCurrency]).toFixed(2)
                         : sendExchangeAmount,
             })
         })
     }
 
-    handleInputChange = (event: ChangeEvent<HTMLInputElement>, isSender: boolean) => {
-        const floatRegex = /^([1-9][0-9]{0,9})([.][1-9]{0,2})?$|^0(\.[0-9]{0,2})?$/
+    handleInputChange = (event: ChangeEvent<HTMLInputElement>, isSender: boolean): undefined => {
+        const floatRegex = /^([1-9][0-9]{0,9})([.][0-9]{0,2})?$|^0(\.[0-9]{0,2})?$/
         if (!floatRegex.test(event.target.value)) {
             if (!event.target.value) {
                 this.setState({ sendExchangeAmount: '', receiveExchangeAmount: '' })
@@ -91,7 +91,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         }
     }
 
-    handleCurrencyChange = (currency: ValueType<{ value: string; label: string }>, isParent: boolean) => {
+    handleCurrencyChange = (currency: ValueType<{ value: string; label: string }>, isParent: boolean): undefined => {
         const { currentReceiveCurrency, currentSendCurrency, sendExchangeAmount, receiveExchangeAmount } = this.state
         if (Array.isArray(currency)) {
             return //type checking
@@ -145,7 +145,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         }
     }
 
-    handleCurrencyExchange = () => {
+    handleCurrencyExchange = (): undefined => {
         const { sendExchangeAmount, currentReceiveCurrency, currentSendCurrency, currencies } = this.state
         if (!currencies) return
         this.props.onCurrencyExchange(
@@ -157,7 +157,7 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         this.setState({ sendExchangeAmount: '', receiveExchangeAmount: '' })
     }
 
-    render(): React.ReactElement<any> {
+    render() {
         const {
             sendExchangeAmount,
             receiveExchangeAmount,

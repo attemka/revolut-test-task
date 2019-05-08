@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { theme } from '../../utils/theme'
-import {H5} from '../common/styled'
+import { H5 } from '../common/styled'
 
 export const ExchangeContainer = styled.div`
     width: 100%;
@@ -22,7 +22,7 @@ export const CurrencyContainer = styled.div`
 `
 
 export const UserAmountContainer = styled(H5)`
-  white-space: nowrap;
+    white-space: nowrap;
 `
 
 export const ExchangeInputContainer = styled.div`
@@ -44,13 +44,13 @@ export const InputWrapper = styled.div`
     min-height: 26px;
 `
 
-export const ExchangeInput = styled('input')<{ value: string; widthVal?: string | null }>`
+export const ExchangeInput = styled('input')<{ value: string }>`
     background: ${({ color }) => color || theme.PRIMARY_COLOR};
     color: ${theme.TEXT_COLOR};
     width: 100%;
     position: absolute;
     left: 0;
-    top: 0;  
+    top: 0;
     font: ${theme.H2} ${theme.FONT};
     text-align: end;
     border: 0;
