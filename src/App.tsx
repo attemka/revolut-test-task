@@ -1,5 +1,4 @@
 import React from 'react'
-import logo from './logo.svg'
 import ExchangeScreen, { CurrencyEntity } from './screens/ExchangeScreen/ExchangeScreen'
 
 type AppState = {

@@ -67,81 +67,77 @@ class ExchangeScreen extends Component<ExchangeScreenProps> {
         })
     }
 
+    updateRatesValues = (isSender: boolean, value: number): void => {
+        const { currencies, currentReceiveCurrency } = this.state
+        if (!currencies) return
+        const calculatedValue: string = isSender
+            ? (value * currencies[currentReceiveCurrency]).toFixed(2)
+            : (value / currencies[currentReceiveCurrency]).toFixed(2)
+
+        this.setState({
+            sendExchangeAmount: isSender ? value : calculatedValue,
+            receiveExchangeAmount: isSender ? calculatedValue : value,
+            currentActive: isSender ? 'sender' : 'receiver',
+        })
+    }
+
     handleInputChange = (event: ChangeEvent<HTMLInputElement>, isSender: boolean) => {
         const floatRegex = /^([1-9][0-9]{0,9})([.][1-9]{0,2})?$|^0(\.[0-9]{0,2})?$/
         if (!floatRegex.test(event.target.value)) {
             if (!event.target.value) {
                 this.setState({ sendExchangeAmount: '', receiveExchangeAmount: '' })
-                return
-            } else return
-        }
-        const value = event.target.value.match(floatRegex)![0]
-        const numberValue: number = parseFloat(value)
-        const { currencies, currentReceiveCurrency } = this.state
-        if (!currencies) {
+            }
             return
         }
-
-        if (isSender) {
-            const receiverRate: string = (numberValue * currencies[currentReceiveCurrency]).toFixed(2)
-            this.setState({ sendExchangeAmount: value, receiveExchangeAmount: receiverRate, currentActive: 'sender' })
-        } else {
-            const senderRate: string = (numberValue / currencies[currentReceiveCurrency]).toFixed(2)
-            this.setState({ receiveExchangeAmount: value, sendExchangeAmount: senderRate, currentActive: 'receiver' })
-        }
+        const value: string = event.target.value.match(floatRegex)![0]
+        const numberValue: number = parseFloat(value)
+        this.updateRatesValues(isSender, numberValue)
     }
 
-    handleCurrencyChange = (currency: ValueType<{ value: string; label: string }>, isParent: boolean) => {
-        const { currentReceiveCurrency, currentSendCurrency, sendExchangeAmount, receiveExchangeAmount } = this.state
-        if (Array.isArray(currency)) {
-            return //type checking
+    updateCurrenciesValues = (currencyValue: string, isSender: boolean): void => {
+        const { currentReceiveCurrency, currentSendCurrency, receiveExchangeAmount, sendExchangeAmount } = this.state
+        const sameValue: boolean = isSender
+            ? currencyValue === currentReceiveCurrency
+            : currencyValue === currentSendCurrency
+        const requestCurrencyValue = isSender ? currencyValue : sameValue ? currentReceiveCurrency : currentSendCurrency
+
+        getCurrencyRates(requestCurrencyValue).then((res: { [key: string]: number }) => {
+            let secondFieldValue: string = ''
+            const helperExchangeAmount: string = isSender
+                ? sendExchangeAmount
+                : sameValue
+                    ? receiveExchangeAmount
+                    : sendExchangeAmount
+
+            if (helperExchangeAmount) {
+                secondFieldValue = isSender
+                    ? (
+                          Number(sendExchangeAmount) * res[sameValue ? currentSendCurrency : currentReceiveCurrency]
+                      ).toFixed(2)
+                    : sameValue
+                        ? (Number(helperExchangeAmount) * res[currentSendCurrency]).toFixed(2)
+                        : (Number(helperExchangeAmount) / res[currencyValue]).toFixed(2)
+            }
+            isSender
+                ? this.setState({
+                      currencies: res,
+                      currentReceiveCurrency: sameValue ? currentSendCurrency : currentReceiveCurrency,
+                      receiveExchangeAmount: secondFieldValue,
+                  })
+                : this.setState({
+                      currencies: res,
+                      currentSendCurrency: sameValue ? currentReceiveCurrency : currentSendCurrency,
+                      sendExchangeAmount: secondFieldValue,
+                  })
+        })
+        this.setState({ [isSender ? 'currentSendCurrency' : 'currentReceiveCurrency']: currencyValue })
+    }
+
+    handleCurrencyChange = (currency: ValueType<{ value: string; label: string }>, isSender: boolean) => {
+        if (currency && !Array.isArray(currency)) {
+            this.updateCurrenciesValues(currency.value, isSender)
         } else {
-            if (!currency) {
-                return
-            }
-            if (isParent) {
-                if (currency.value === currentReceiveCurrency) {
-                    getCurrencyRates(currency.value).then((res: { [key: string]: number }) => {
-                        const receiverRate: string = sendExchangeAmount
-                            ? (Number(sendExchangeAmount) * res[currentSendCurrency]).toFixed(2)
-                            : ''
-                        this.setState({
-                            currencies: res,
-                            receiveExchangeAmount: receiverRate,
-                            currentReceiveCurrency: currentSendCurrency,
-                        })
-                    })
-                } else {
-                    getCurrencyRates(currency.value).then((res: { [key: string]: number }) => {
-                        const receiverRate: string = sendExchangeAmount
-                            ? (Number(sendExchangeAmount) * res[currentReceiveCurrency]).toFixed(2)
-                            : ''
-                        this.setState({ currencies: res, receiveExchangeAmount: receiverRate })
-                    })
-                }
-                this.setState({ currentSendCurrency: currency.value })
-            } else {
-                if (currency.value === currentSendCurrency) {
-                    getCurrencyRates(currentReceiveCurrency).then(res => {
-                        const senderValue: string = receiveExchangeAmount
-                            ? (Number(receiveExchangeAmount) * res[currentSendCurrency]).toFixed(2)
-                            : ''
-                        this.setState({
-                            currencies: res,
-                            currentSendCurrency: currentReceiveCurrency,
-                            sendExchangeAmount: senderValue,
-                        })
-                    })
-                } else {
-                    getCurrencyRates(currentSendCurrency).then(res => {
-                        const senderValue: string = sendExchangeAmount
-                            ? (Number(sendExchangeAmount) / res[currency.value]).toFixed(2)
-                            : ''
-                        this.setState({ currencies: res, sendExchangeAmount: senderValue })
-                    })
-                }
-                this.setState({ currentReceiveCurrency: currency.value })
-            }
+            return
         }
     }
 

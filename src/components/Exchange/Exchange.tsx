@@ -1,14 +1,13 @@
-import React, { ChangeEvent, Component, RefObject } from 'react'
+import React, { ChangeEvent} from 'react'
 import {
     ExchangeContainer,
     CurrencyContainer,
     ExchangeInput,
     ExchangeInputContainer,
-    CurrencyRateBlock,
     InputWrapper,
     UserAmountContainer,
 } from './styled'
-import { Colored, H5, HiddenValue } from '../common/styled'
+import { Colored, HiddenValue } from '../common/styled'
 import Select from 'react-select'
 import { ValueType } from 'react-select/lib/types'
 import { theme } from '../../utils/theme'
@@ -43,11 +42,8 @@ export const Exchange: React.FC<ExchangeProps> = ({
     isSender,
     onInputChange,
     bgColor,
-    ...props
 }) => {
     let inputRef: any = React.createRef()
-
-    //@ts-ignore
     return (
         <ExchangeContainer color={bgColor}>
             <CurrencyContainer>
@@ -70,7 +66,6 @@ export const Exchange: React.FC<ExchangeProps> = ({
                         data-testid={`exchange-input-${isSender ? 'sender' : 'receiver'}`}
                         aria-label={'exchange-input'}
                         color={bgColor}
-                        //@ts-ignore
                         widthVal={(inputRef.current && inputRef.current.clientWidth) || '1'}
                         placeholder={'0'}
                         autoFocus={isSender}
